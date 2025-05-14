@@ -5,4 +5,6 @@ defmodule Freedpp.App do
       adapter: Commanded.EventStore.Adapters.EventStore,
       event_store: Freedpp.EventStore
     ]
+
+    router Freedpp.Accounts.Router
 end

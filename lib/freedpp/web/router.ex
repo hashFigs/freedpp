@@ -7,7 +7,6 @@ defmodule FreedppWeb.Router do
   plug :match
   plug :dispatch
 
-
   post "/register" do
     FreedppWeb.AuthController.register(conn)
   end
@@ -18,7 +17,7 @@ defmodule FreedppWeb.Router do
 
   # DPP endpoints
   forward "/dpp/events", to: Freedpp.DPPEventController, init_opts: []
-  forward "/dpp",        to: Freedpp.DPPController,      init_opts: []
+  forward "/dpp", to: Freedpp.DPPController, init_opts: []
 
   # Fallback
   match _ do
