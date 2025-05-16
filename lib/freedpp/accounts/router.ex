@@ -5,5 +5,6 @@ defmodule Freedpp.Accounts.Router do
   alias Freedpp.Accounts.Commands.RegisterUser
 
   identify User, by: :user_uuid
-  dispatch RegisterUser, to: User
+
+  dispatch RegisterUser, to: User, identity: :user_uuid
 end

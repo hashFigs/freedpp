@@ -1,11 +1,17 @@
 defmodule FreedppWeb.Router do
   use Plug.Router
+  IO.puts("estic dins el router")
 
   plug Plug.Parsers,
     parsers: [:json],
     json_decoder: Jason
   plug :match
   plug :dispatch
+
+
+
+
+
 
   post "/register" do
     FreedppWeb.AuthController.register(conn)

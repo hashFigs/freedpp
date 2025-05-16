@@ -1,24 +1,34 @@
 defmodule FreedppWeb.AuthController do
   import Plug.Conn
-  alias Freedpp.Accounts
 
   def register(%Plug.Conn{params: %{"username" => username, "email" => email, "password" => password}} = conn) do
     hashed_password = Bcrypt.hash_pwd_salt(password)
 
+    IO.puts("[AuthController] Registering user...")
+
+    {:ok, binary_uuid} = Ecto.UUID.dump(Ecto.UUID.generate())
+
+
     cmd = %Freedpp.Accounts.Commands.RegisterUser{
-      user_uuid: UUID.uuid4(),
+      user_uuid: binary_uuid,
       username: username,
       email: email,
       hashed_password: hashed_password
     }
 
-    case Freedpp.App.dispatch(cmd) do
-      :ok ->
-        send_resp(conn, 201, "User registered successfully")
+    IO.puts("[AuthController] Registering 2 user...")
 
-      {:error, reason} ->
-        send_resp(conn, 400, "Failed to register user: #{inspect(reason)}")
-    end
+    result =
+      case Freedpp.App.dispatch(cmd) do
+        :ok ->
+          send_resp(conn, 201, "User registered successfully")
+
+        {:error, reason} ->
+          send_resp(conn, 400, "Failed to register user: #{inspect(reason)}")
+      end
+
+    IO.puts("[AuthController] Registering 3 user...")
+    result
   end
 
   def register(conn) do

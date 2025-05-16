@@ -1,9 +1,11 @@
 defmodule Freedpp.Accounts.Aggregates.User do
   use Ecto.Schema
-  import Ecto.Changeset
 
   @primary_key {:uuid, :binary_id, autogenerate: false}
-  @derive {Jason.Encoder, only: [:uuid, :username, :email, :hashed_password]}
+  @foreign_key_type :binary_id
+  @derive {Jason.Encoder, only: [ :username, :email, :hashed_password]}
+
+IO.puts("aqui no peta")
   schema "users" do
     field :username, :string
     field :email, :string
@@ -12,15 +14,11 @@ defmodule Freedpp.Accounts.Aggregates.User do
     timestamps()
   end
 
-  def changeset(user, attrs) do
-    user
-    |> cast(attrs, [:uuid, :username, :email, :hashed_password])
-    |> validate_required([:uuid, :username, :email, :hashed_password])
-    |> unique_constraint(:email)
-  end
-
-  # command handler
+  # Handle command
   def execute(%__MODULE__{uuid: nil}, %Freedpp.Accounts.Commands.RegisterUser{} = cmd) do
+
+    IO.puts("[Aggregate] Handling RegisterUser command")
+
     %Freedpp.Accounts.Events.UserRegistered{
       user_uuid: cmd.user_uuid,
       username: cmd.username,
@@ -29,7 +27,7 @@ defmodule Freedpp.Accounts.Aggregates.User do
     }
   end
 
-  # event applier
+  # Apply event
   def apply(%__MODULE__{} = user, %Freedpp.Accounts.Events.UserRegistered{} = evt) do
     %__MODULE__{
       user |
